@@ -8,10 +8,10 @@ from utility import get_face, l2_normalizer, get_encode, plt_show, load_pickle
 face_detector = mtcnn.MTCNN()
 face_encoder = ModelSingleton.get_instance('facenet_keras.h5')
 encodings_path = 'encodings/encodings.pkl'
-img_test_path = 'img_test/tsiky(1).png'
+img_test_path = 'img_test/fy.jpg'
 # img_test_result_path = 'img_test_result/messi_neymar.jpeg'
 
-recognition_t = 0.3
+recognition_t = 0.9
 required_size = (160, 160)
 
 encoding_dict = load_pickle(encodings_path)
@@ -36,12 +36,15 @@ for res in results:
         if dist < recognition_t and dist < distance:
             name = db_name
             distance = dist
+            print('distance', distance)
+            print('name', name)
+            print(dist)
     if name == 'unknown':
         cv2.rectangle(img, pt_1, pt_2, (0, 0, 255), 2)
-        cv2.putText(img, name, pt_1, cv2.FONT_HERSHEY_SIMPLEX,2, (0, 0, 255), 2)
+        cv2.putText(img, name, pt_1, cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 2)
     else:
         cv2.rectangle(img, pt_1, pt_2, (0, 255, 0), 2)
-        cv2.putText(img, name, pt_1, cv2.FONT_HERSHEY_PLAIN,8, (0, 255, 0), 8)
+        cv2.putText(img, name, pt_1, cv2.FONT_HERSHEY_PLAIN, 4, (0, 255, 0), 4)
 
 cv2.imwrite('img_test_result/result.jpeg', img)
 plt_show(img)
