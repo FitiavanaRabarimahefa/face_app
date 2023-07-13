@@ -9,14 +9,14 @@ from scipy.spatial.distance import cosine
 
 
 def detect_face(data_face):
-    model = ModelSingleton.get_instance('facenet_keras.h5')
+    model = ModelSingleton.get_instance()
     img_array = np.array(face)
     return model.model.predict(tf.expand_dims(img_array, axis=0))[0]
 
 
 face_encoder = ModelSingleton.get_instance('facenet_keras.h5')
 required_size = (160, 160)
-recognition_t = 0.5,
+recognition_t = 0.07,
 encoding_dict = load_pickle('encodings/encodings.pkl')
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 cap = cv2.VideoCapture(0)
@@ -28,7 +28,8 @@ while True:
     if len(faces) > 0:
         x1, y1, width, height = faces[0]
     else:
-        x1, y1, width, height = 1, 1, 10, 10
+        # x1, y1, width, height = 1, 1, 10, 10
+        continue
 
     x1, y1 = abs(x1), abs(y1)
     x2, y2 = x1 + width, y1 + height
@@ -64,8 +65,8 @@ while True:
         cv2.putText(frame, name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 2)
     else:
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        cv2.putText(frame, name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 2)
-    cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+        cv2.putText(frame, name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
+    # cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
     cv2.imshow('frame', frame)
     if cv2.waitKey(20) & 0XFF == ord('q'):

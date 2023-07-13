@@ -34,7 +34,7 @@ for person_name in os.listdir(people_dir):
             encodes.append(encode)
     if encodes:
         encode = np.sum(encodes, axis=0)
-        encode = l2_normalizer.transform(np.expand_dims(encode, axis=0))[0]
+        # encode = l2_normalizer.transform(np.expand_dims(encode, axis=0))[0]
         encoding_dict[person_name] = encode
 
 for key in encoding_dict.keys():

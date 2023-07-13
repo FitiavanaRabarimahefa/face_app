@@ -8,10 +8,10 @@ from utility import get_face, l2_normalizer, get_encode, plt_show, load_pickle
 face_detector = mtcnn.MTCNN()
 face_encoder = ModelSingleton.get_instance('facenet_keras.h5')
 encodings_path = 'encodings/encodings.pkl'
-img_test_path = 'img_test/fy.jpg'
+img_test_path = 'img_test/mbappe.jfif'
 # img_test_result_path = 'img_test_result/messi_neymar.jpeg'
 
-recognition_t = 0.9
+recognition_t = 0.07  # first_test_0.1 second_test_0.06 third_test 0.05 stable_test_0.07
 required_size = (160, 160)
 
 encoding_dict = load_pickle(encodings_path)
