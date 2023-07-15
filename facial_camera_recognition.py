@@ -16,14 +16,14 @@ def detect_face(data_face):
 
 face_encoder = ModelSingleton.get_instance('facenet_keras.h5')
 required_size = (160, 160)
-recognition_t = 0.07,
+recognition_t = 0.8,
 encoding_dict = load_pickle('encodings/encodings.pkl')
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 cap = cv2.VideoCapture(0)
 while True:
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, 1.5, 5)
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
 
     if len(faces) > 0:
         x1, y1, width, height = faces[0]
