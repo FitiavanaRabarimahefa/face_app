@@ -8,22 +8,22 @@ from utility import get_encode, l2_normalizer, load_pickle
 from scipy.spatial.distance import cosine
 
 
-def detect_face(data_face):
-    model = ModelSingleton.get_instance()
-    img_array = np.array(face)
+def detect_face(face_data):
+    model = ModelSingleton.get_instance('facenet_keras.h5')
+    img_array = np.array(face_data)
     return model.model.predict(tf.expand_dims(img_array, axis=0))[0]
 
 
-face_encoder = ModelSingleton.get_instance('facenet_keras.h5')
-required_size = (160, 160)
-recognition_t = 0.8,
+# face_encoder = ModelSingleton.get_instance('facenet_keras.h5')
+# required_size = (160, 160)
+recognition_t = 0.07,
 encoding_dict = load_pickle('encodings/encodings.pkl')
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 cap = cv2.VideoCapture(0)
 while True:
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=4)
 
     if len(faces) > 0:
         x1, y1, width, height = faces[0]
@@ -49,11 +49,10 @@ while True:
     face = (face - mean) / std
 
     face_signature = detect_face(face)
-    encode = get_encode(face_encoder, face, required_size)
-    encode = l2_normalizer.transform(encode.reshape(1, -1))[0]
+    # encode = get_encode(face_encoder, face, required_size)
+    encode = l2_normalizer.transform(face_signature.reshape(1, -1))[0]
 
     name = 'unknown'
-
     distance = float("inf")
     for db_name, db_encode in encoding_dict.items():
         dist = cosine(db_encode, encode)

@@ -4,7 +4,7 @@ import numpy as np
 from numpy import asarray
 from PIL import Image
 from singleton import ModelSingleton
-from utility import l2_normalizer, load_pickle
+from utility import get_encode, l2_normalizer, load_pickle
 from scipy.spatial.distance import euclidean
 
 
@@ -21,9 +21,18 @@ cap = cv2.VideoCapture(1)
 while True:
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    faces = face_cascade.detectMultiScale(gray, 1.1, 4, 4)
+    """
+    if len(faces) > 0:
+        x1, y1, width, height = faces[0]
+    else:
+        # x1, y1, width, height = 1, 1, 10, 10
+        continue
+    """
 
     for (x1, y1, width, height) in faces:
+        x1, y1, width, height = faces[0]
+
         x1, y1 = abs(x1), abs(y1)
         x2, y2 = x1 + width, y1 + height
 
@@ -60,9 +69,9 @@ while True:
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(frame, name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
 
-        cv2.imshow('frame', frame)
-        if cv2.waitKey(20) & 0XFF == ord('q'):
-            break
+    cv2.imshow('frame', frame)
+    if cv2.waitKey(20) & 0XFF == ord('q'):
+        break
 
 cap.release()
 cv2.destroyAllWindows()

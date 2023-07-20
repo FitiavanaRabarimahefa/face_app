@@ -1,7 +1,9 @@
 from singleton import ModelSingleton
+from keras.models import load_model
+
 
 try:
-    ModelSingleton.get_instance("./facenet_keras.h5")
+    data = load_model('facenet_keras.h5')
     print('valid')
 except ValueError:
     print('invalid')

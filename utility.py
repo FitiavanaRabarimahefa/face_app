@@ -19,6 +19,16 @@ def get_encode(face_encoder, face, size):
     return encode
 
 
+""""
+def get_face(img, box):
+    x1, y1, width, height = box
+    x1, y1 = abs(x1), abs(y1)
+    x2, y2 = x1 + width, y1 + height
+    face = img[y1:y2, x1:x2]
+    return face, (x1, y1), (x2, y2)
+"""
+
+
 def get_face(img, box):
     x1, y1, width, height = box
     x1, y1 = abs(x1), abs(y1)
