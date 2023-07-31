@@ -19,9 +19,9 @@ def detect_face(face_data):
 recognition_t = 0.07,
 encoding_dict = load_pickle('encodings/encodings.pkl')
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-time = datetime.datetime.now()
 cap = cv2.VideoCapture(1)
 while True:
+    time = datetime.datetime.now()
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
@@ -65,7 +65,8 @@ while True:
         else:
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(frame, name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
-            handle_database(name, time)
+            # handle_database(name, time)
+            print(time)
     cv2.imshow('frame', frame)
     if cv2.waitKey(20) & 0XFF == ord('q'):
         break
