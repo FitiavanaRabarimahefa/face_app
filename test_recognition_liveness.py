@@ -1,38 +1,41 @@
 import cv2
+import os
 import tensorflow as tf
 import numpy as np
+import pickle
 from numpy import asarray
 from PIL import Image
+from utility import l2_normalizer, load_pickle
+from keras.models import model_from_json
 from singleton import ModelSingleton
-from utility import get_encode, l2_normalizer, load_pickle
 from scipy.spatial.distance import euclidean
 
 
 def detect_face(face_data):
-    model = ModelSingleton.get_instance('facenet_keras.h5')
+    models = ModelSingleton.get_instance('facenet_keras.h5')
     img_array = np.array(face_data)
-    return model.model.predict(tf.expand_dims(img_array, axis=0))[0]
+    return models.model.predict(tf.expand_dims(img_array, axis=0))[0]
 
 
-recognition_t = 0.07,
-encoding_dict = load_pickle('encodings/encodings.pkl')
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-cap = cv2.VideoCapture(0)
+root_dir = os.getcwd()
+face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+json_file = open('antispoofing_models/antispoofing_model.json', 'r')
+loaded_model_json = json_file.read()
+json_file.close()
+model = model_from_json(loaded_model_json)
+# model.load_weights('antispoofing_models/antispoofing_model.h5')
+
+file = open("encodings/encodings.pkl", "rb")
+encoding_dict = pickle.load(file)
+file.close()
+
+video = cv2.VideoCapture(0)
 while True:
-    ret, frame = cap.read()
+    ret, frame = video.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, 1.1, 4, 4)
-    """
-    if len(faces) > 0:
-        x1, y1, width, height = faces[0]
-    else:
-        # x1, y1, width, height = 1, 1, 10, 10
-        continue
-    """
+    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
     for (x1, y1, width, height) in faces:
-        x1, y1, width, height = faces[0]
-
         x1, y1 = abs(x1), abs(y1)
         x2, y2 = x1 + width, y1 + height
 
@@ -53,7 +56,6 @@ while True:
 
         name = 'unknown'
         dist_norm_min = 100
-        distance = float("inf")
         for db_name, db_encode in encoding_dict.items():
             # dist_norm = np.linalg.norm(db_encode - face_signature)
             dist_norm = euclidean(db_encode, face_signature)
@@ -68,10 +70,11 @@ while True:
         else:
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(frame, name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
+            # handle_database(name, time)
+            # print(time)
 
     cv2.imshow('frame', frame)
     if cv2.waitKey(20) & 0XFF == ord('q'):
         break
-
-cap.release()
+video.release()
 cv2.destroyAllWindows()

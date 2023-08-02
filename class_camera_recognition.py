@@ -23,7 +23,7 @@ def create_camera_app(encodings_path):
         time = datetime.datetime.now()
         ret, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
         if len(faces) == 0:
             continue

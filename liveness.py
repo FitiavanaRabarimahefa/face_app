@@ -12,7 +12,7 @@ model = model_from_json(loaded_model_json)
 model.load_weights('antispoofing_models/antispoofing_model.h5')
 print("Model loaded from disk")
 
-video = cv2.VideoCapture(1)
+video = cv2.VideoCapture(0)
 while True:
     ret, frame = video.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)

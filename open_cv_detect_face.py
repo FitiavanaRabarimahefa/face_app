@@ -24,10 +24,7 @@ while True:
     time = datetime.datetime.now()
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-
-    if len(faces) == 0:
-        continue
+    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
     for (x1, y1, width, height) in faces:
         x1, y1 = abs(x1), abs(y1)
