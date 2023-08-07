@@ -1,0 +1,7 @@
+{
+  "students":[
+    {"absence":2, "retard":3, "abandonment":"faible"},
+    {"absence":10, "retard":42, "abandonment":"moyen"},
+    {"absence":10, "retard":3, "abandonment":10}
+  ]
+}

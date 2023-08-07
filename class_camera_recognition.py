@@ -7,6 +7,7 @@ from PIL import Image
 from singleton import ModelSingleton
 from utility import l2_normalizer, load_pickle
 from scipy.spatial.distance import euclidean
+from database_connection import check_insert
 
 
 def detect_face(face_data):
@@ -25,9 +26,6 @@ def create_camera_app(encodings_path):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
-        if len(faces) == 0:
-            continue
-
         for (x1, y1, width, height) in faces:
             x1, y1 = abs(x1), abs(y1)
             x2, y2 = x1 + width, y1 + height
@@ -45,11 +43,13 @@ def create_camera_app(encodings_path):
             mean, std = face.mean(), face.std()
             face = (face - mean) / std
             face_signature = detect_face(face)
-            encode = l2_normalizer.transform(face_signature.reshape(1, -1))[0]
+            # encode = l2_normalizer.transform(face_signature.reshape(1, -1))[0]
 
             name = 'unknown'
             dist_norm_min = 100
+            distance = float("inf")
             for db_name, db_encode in encoding_dict.items():
+                # dist_norm = np.linalg.norm(db_encode - face_signature)
                 dist_norm = euclidean(db_encode, face_signature)
                 if dist_norm < dist_norm_min and dist_norm < 2.6:
                     name = db_name
@@ -62,8 +62,9 @@ def create_camera_app(encodings_path):
             else:
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 cv2.putText(frame, name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
-                # handle_database(name, time)
-                print(time)
+                check_insert(name, time)
+                # print(time)
+
         cv2.imshow('frame', frame)
         if cv2.waitKey(20) & 0XFF == ord('q'):
             break

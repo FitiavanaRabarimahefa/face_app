@@ -2,12 +2,13 @@ import cv2
 import tensorflow as tf
 import numpy as np
 import datetime
+import time
 from numpy import asarray
 from PIL import Image
 from singleton import ModelSingleton
 from utility import l2_normalizer, load_pickle
 from scipy.spatial.distance import euclidean
-from database_connection import handle_database
+from database_connection import check_insert
 
 
 def detect_face(face_data):
@@ -21,7 +22,7 @@ encoding_dict = load_pickle('encodings/encodings.pkl')
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 cap = cv2.VideoCapture(1)
 while True:
-    time = datetime.datetime.now()
+    # time = datetime.datetime.now()
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
@@ -62,7 +63,7 @@ while True:
         else:
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(frame, name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
-            # handle_database(name, time)
+            check_insert(name)
             print(time)
     cv2.imshow('frame', frame)
     if cv2.waitKey(20) & 0XFF == ord('q'):
