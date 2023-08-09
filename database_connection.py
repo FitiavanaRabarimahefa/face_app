@@ -8,6 +8,14 @@ def create_connexion():
     return db
 
 
+def calculate_time_difference(time_arrived, time_default):
+    time_d = datetime.datetime.strptime(time_default, "%H:%M:%S")
+    time_arr = datetime.datetime.strptime(time_arrived, "%H:%M:%S")
+    difference = time_arr - time_d
+    difference_in_minutes = difference.total_seconds() // 60
+    return difference_in_minutes
+
+
 def compare_time(name):
     time = datetime.datetime.now()
     time_arrived = time.strftime("%H:%M:%S")
@@ -17,7 +25,8 @@ def compare_time(name):
         presence_status = True
         insert_student(name, time_arrived, presence_status)
     else:
-        presence_status = "retard"
+        difference = calculate_time_difference(time_arrived, time_default)
+        presence_status = "retard " + str(difference) + " minutes"
         insert_student(name, time_arrived, presence_status)
 
 
@@ -62,3 +71,6 @@ def add_schedule_database(subject, date, start_time, end_time, semester):
     else:
         print('error on insert schedule data')
     return result
+
+
+add_schedule_database("Math", "20-0.-2023", "09:00:00", "10:00:00", "S1")

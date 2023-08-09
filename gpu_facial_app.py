@@ -1,26 +1,25 @@
 import cv2
 import tensorflow as tf
 import numpy as np
-import datetime
 import time
 from numpy import asarray
 from PIL import Image
-from singleton import ModelSingleton
+from keras.models import load_model
 from utility import l2_normalizer, load_pickle
 from scipy.spatial.distance import euclidean
 from database_connection import check_insert
 
-
+""""
 def detect_face(face_data):
     model = ModelSingleton.get_instance('facenet_keras.h5')
     img_array = np.array(face_data)
     return model.model.predict(tf.expand_dims(img_array, axis=0))[0]
+"""
 
-
-recognition_t = 0.07,
+face_encoder = load_model('facenet_keras.h5', compile=False)
 encoding_dict = load_pickle('encodings/encodings.pkl')
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 while True:
     # time = datetime.datetime.now()
     ret, frame = cap.read()
@@ -43,7 +42,7 @@ while True:
         face = face.astype('float32')
         mean, std = face.mean(), face.std()
         face = (face - mean) / std
-        face_signature = detect_face(face)
+        face_signature = face_encoder.model.predict(np.expand_dims(face, axis=0))[0]
         encode = l2_normalizer.transform(face_signature.reshape(1, -1))[0]
 
         name = 'unknown'

@@ -1,7 +1,6 @@
 import cv2
 import tensorflow as tf
 import numpy as np
-import datetime
 from numpy import asarray
 from PIL import Image
 from singleton import ModelSingleton
@@ -21,7 +20,6 @@ def create_camera_app(encodings_path):
     face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     cap = cv2.VideoCapture(1)
     while True:
-        time = datetime.datetime.now()
         ret, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
@@ -62,7 +60,7 @@ def create_camera_app(encodings_path):
             else:
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 cv2.putText(frame, name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
-                check_insert(name, time)
+                check_insert(name)
                 # print(time)
 
         cv2.imshow('frame', frame)
