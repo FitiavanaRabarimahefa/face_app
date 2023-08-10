@@ -21,7 +21,7 @@ def compare_time(name):
     time_arrived = time.strftime("%H:%M:%S")
     time_default = "08:21:00"
 
-    if time_arrived < time_default:
+    if time_arrived <= time_default:
         presence_status = True
         insert_student(name, time_arrived, presence_status)
     else:
