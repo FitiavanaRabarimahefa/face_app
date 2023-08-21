@@ -8,7 +8,9 @@ from PIL import Image
 from singleton import ModelSingleton
 from utility import l2_normalizer, load_pickle
 from scipy.spatial.distance import euclidean
-from database_connection import check_insert
+
+
+# from database_connection import check_insert
 
 
 def detect_face(face_data):
@@ -63,7 +65,7 @@ while True:
         else:
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(frame, name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
-            check_insert(name)
+            # check_insert(name)
             print(time)
     cv2.imshow('frame', frame)
     if cv2.waitKey(20) & 0XFF == ord('q'):
