@@ -88,65 +88,15 @@ def create_dict_fake_data():
     for x in range(1, 150):
         data_fake = {
             "Semestre_1": {
-                "INF101": random.randint(2, 11),
-                "INF104": random.randint(2, 11),
-                "INF107": random.randint(2, 11),
-                "MTH101": random.randint(2, 11),
-                "MTH102": random.randint(2, 11),
-                "ORG101": random.randint(2, 11),
-                "Nb_retard": random.randint(0, 40),
-                "Nb_absence": random.randint(0, 40),
-
+                "INF101": random.randint(5, 20),
+                "INF104": random.randint(5, 20),
+                "INF107": random.randint(5, 20),
+                "MTH101": random.randint(5, 20),
+                "MTH102": random.randint(5, 20),
+                "ORG101": random.randint(5, 20),
+                "Nb_retard": random.randint(5, 20),
+                "Nb_absence": random.randint(5, 20),
             },
-            "Semestre_2": {
-                "INF106": random.randint(2, 11),
-                "MTH103": random.randint(2, 11),
-                "MTH105": random.randint(2, 11),
-                "Nb_retard": random.randint(0, 40),
-                "Nb_absence": random.randint(0, 40),
-
-            },
-            "Semestre_3": {
-                "INF201": random.randint(2, 11),
-                "INF202": random.randint(2, 11),
-                "INF203": random.randint(2, 11),
-                "INF208": random.randint(2, 11),
-                "MTH201": random.randint(2, 11),
-                "ORG201": random.randint(2, 11),
-                "Nb_retard": random.randint(0, 40),
-                "Nb_absence": random.randint(0, 40),
-
-            },
-            "Semestre_4": {
-                "INF207": random.randint(2, 11),
-                "INF210": random.randint(2, 11),
-                "MTH204": random.randint(2, 11),
-                "MTH205": random.randint(2, 11),
-                "MTH206": random.randint(2, 11),
-                "MTH203": random.randint(2, 11),
-                "Nb_retard": random.randint(0, 40),
-                "Nb_absence": random.randint(0, 40),
-
-            },
-            "Semestre_5": {
-                "INF301": random.randint(2, 11),
-                "INF304": random.randint(2, 11),
-                "INF307": random.randint(2, 11),
-                "ORG301": random.randint(2, 11),
-                "ORG302": random.randint(2, 11),
-                "ORG303": random.randint(2, 11),
-                "Nb_retard": random.randint(0, 40),
-                "Nb_absence": random.randint(0, 40),
-
-            },
-            "Semestre_6": {
-                "INF310": random.randint(2, 11),
-                "ORG304": random.randint(2, 11),
-                "Nb_retard": random.randint(0, 40),
-                "Nb_absence": random.randint(0, 40),
-
-            },
-
         }
         tab_data_fake.append(data_fake)
         with open("dataset_with_contraint.json", "w") as f:
@@ -176,7 +126,73 @@ def add_pt_on_json():
     return data
 
 
+def fake_data_mention_prediction():
+    tab_data_fake = []
+    for x in range(1, 3):
+        data_fake = {
+            "Semestre_1": {
+                "INF101": random.randint(7, 20),
+                "INF104": random.randint(7, 20),
+                "INF107": random.randint(7, 20),
+                "MTH101": random.randint(7, 20),
+                "MTH102": random.randint(7, 20),
+                "ORG101": random.randint(7, 20),
+            },
+            "Semestre_2": {
+                "INF102": random.randint(7, 20),
+                "INF103": random.randint(7, 20),
+                "INF105": random.randint(7, 20),
+                "MTH106": random.randint(7, 20),
+                "MTH103": random.randint(7, 20),
+                "MTH105": random.randint(7, 20),
+            },
+            "Semestre_3": {
+                "INF201": random.randint(7, 20),
+                "INF202": random.randint(7, 20),
+                "INF203": random.randint(7, 20),
+                "INF208": random.randint(7, 20),
+                "MTH201": random.randint(7, 20),
+                "ORG201": random.randint(7, 20),
+            },
+        }
+        tab_data_fake.append(data_fake)
+        with open("dataset_mention_predict.json", "w") as f:
+            json.dump(tab_data_fake, f)
+    return tab_data_fake
+
+
+def combination_data(data):
+    combined_data = {}
+    for semester_data in data:
+        for semester, subjects in semester_data.items():
+            if semester not in combined_data:
+                combined_data[semester] = subjects
+            else:
+                combined_data[semester].update(subjects)
+    return combined_data
+
+
+def get_all_good_mark_semester():
+    with open('dataset_mention_predict.json') as f:
+        data = json.load(f)
+    data_tmp = combination_data(data)
+
+    marks_superior = []
+    for semester, subjects in data_tmp.items():
+        marks_superior_subjects = {}
+        for subject, mark in subjects.items():
+            if mark > 10:
+                marks_superior_subjects[subject] = mark
+        if marks_superior_subjects:
+            marks_superior.append({semester: marks_superior_subjects})
+
+    return len(marks_superior)
+
+
 # create_dict_fake_data()
 # load_data = add_pt_on_json()
 # print(load_data)
-add_pt_on_json()
+# add_pt_on_json()
+# fake_data_mention_prediction()
+
+print(get_all_good_mark_semester())
