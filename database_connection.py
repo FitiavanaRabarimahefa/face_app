@@ -128,7 +128,7 @@ def add_pt_on_json():
 
 def fake_data_mention_prediction():
     tab_data_fake = []
-    for x in range(1, 3):
+    for x in range(1, 150):
         data_fake = {
             "Semestre_1": {
                 "INF101": random.randint(7, 20),
@@ -186,7 +186,101 @@ def get_all_good_mark_semester():
         if marks_superior_subjects:
             marks_superior.append({semester: marks_superior_subjects})
 
-    return len(marks_superior)
+    return marks_superior
+
+
+def checking_dev(data):
+    for student in data:
+        marks_s1 = [student["Semestre_1"]["INF101"],
+                    student["Semestre_1"]["INF104"],
+                    student["Semestre_1"]["INF107"],
+                    student["Semestre_1"]["MTH102"]]
+        marks_s2 = [
+            student["Semestre_2"]["INF102"],
+            student["Semestre_2"]["INF105"],
+            student["Semestre_2"]["MTH103"]
+        ]
+        marks_s3 = [
+            student["Semestre_3"]["INF201"],
+            student["Semestre_3"]["INF202"],
+            student["Semestre_3"]["INF208"]
+        ]
+
+        semester_1 = sum(marks_s1) / len(marks_s1)
+        semester_2 = sum(marks_s2) / len(marks_s2)
+        semester_3 = sum(marks_s3) / len(marks_s3)
+        report_marks = (semester_1 + semester_2 + semester_3) / 3
+        return report_marks
+
+
+def checking_data_mention(data):
+    for student in data:
+        marks_s1 = [student["Semestre_1"]["MTH101"],
+                    student["Semestre_1"]["MTH102"],
+                    student["Semestre_1"]["INF107"],
+                    ]
+        marks_s2 = [
+            student["Semestre_2"]["INF102"],
+            student["Semestre_2"]["INF103"],
+            student["Semestre_2"]["INF105"],
+            student["Semestre_2"]["MTH105"]
+        ]
+        marks_s3 = [
+            student["Semestre_3"]["INF202"],
+            student["Semestre_3"]["INF203"],
+            student["Semestre_3"]["INF208"],
+            student["Semestre_3"]["ORG201"],
+        ]
+
+        semester_1 = sum(marks_s1) / len(marks_s1)
+        semester_2 = sum(marks_s2) / len(marks_s2)
+        semester_3 = sum(marks_s3) / len(marks_s3)
+        report_marks = (semester_1 + semester_2 + semester_3) / 3
+        return report_marks
+
+
+def checking_web_design(data):
+    for student in data:
+        marks_s1 = [student["Semestre_1"]["INF101"],
+                    student["Semestre_1"]["INF104"],
+                    student["Semestre_1"]["INF107"],
+                    ]
+        marks_s2 = [
+            student["Semestre_2"]["INF105"],
+        ]
+        marks_s3 = [
+            student["Semestre_3"]["INF201"],
+            student["Semestre_3"]["MTH201"],
+        ]
+
+        semester_1 = sum(marks_s1) / len(marks_s1)
+        semester_2 = sum(marks_s2) / len(marks_s2)
+        semester_3 = sum(marks_s3) / len(marks_s3)
+        report_marks = (semester_1 + semester_2 + semester_3) / 3
+        return report_marks
+
+
+def create_mention_data():
+    with open('dataset_mention_predict.json') as f:
+        data = json.load(f)
+    tab_max_key = []
+    for value in data:
+        check_dev = checking_dev([value])
+        check_data_mention = checking_data_mention([value])
+        check_web_design = checking_web_design([value])
+
+        marks = {
+            "dev": check_dev,
+            "base de donnée": check_data_mention,
+            "web design": check_web_design
+        }
+
+        max_key = max(marks, key=lambda k: marks[k])
+        value["mention"] = max_key
+        tab_max_key.append(max_key)
+        with open("dataset_mention_predict.json", "w") as f:
+            json.dump(data, f)
+    return data
 
 
 # create_dict_fake_data()
@@ -194,5 +288,6 @@ def get_all_good_mark_semester():
 # print(load_data)
 # add_pt_on_json()
 # fake_data_mention_prediction()
-
-print(get_all_good_mark_semester())
+# print(get_all_good_mark_semester())
+print(create_mention_data())
+# print(test())
