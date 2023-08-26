@@ -270,9 +270,9 @@ def create_mention_data():
         check_web_design = checking_web_design([value])
 
         marks = {
-            "dev": check_dev,
-            "base de donnée": check_data_mention,
-            "web design": check_web_design
+            "100": check_dev,  # dev mention
+            "110": check_data_mention,  # BD mention
+            "60": check_web_design  # Web_design mention
         }
 
         max_key = max(marks, key=lambda k: marks[k])
