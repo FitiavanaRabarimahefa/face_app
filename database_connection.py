@@ -76,13 +76,15 @@ def add_schedule_database(subject, date, start_time, end_time, semester):
 
 
 # add_schedule_database("Math", "20-0.-2023", "09:00:00", "10:00:00", "S1")
-
+"""
 def calculate_pt_abandonment(retard, absence, total_hours):
     h_total_missing = retard + absence
     pt_total = (h_total_missing / total_hours) * 100
     return round(pt_total, 2)
+"""
 
 
+# Creation dataset to train
 def create_dict_fake_data():
     tab_data_fake = []
     for x in range(1, 150):
